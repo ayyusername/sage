@@ -1,5 +1,4 @@
+# Sage Requirements - Step 1.1 Complete
+huggingface_hub[mcp]>=0.32.0
 openai>=1.0.0
-mcp>=1.0.0
-asyncio
-json
-requests
+requests>=2.32.0

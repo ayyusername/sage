@@ -2,43 +2,109 @@
 
 *An intelligent culinary knowledge system for professional recipe management and meal planning*
 
-## Vision
+## 🎯 Current Status: Step 1.1 Complete ✅
 
-Transform your Obsidian recipe vault into a semantically-rich knowledge base that evolves with advancing AI capabilities. Built for culinary professionals who need sophisticated meal planning, prep optimization, and equipment scheduling.
+**Live Repository**: https://github.com/ayyusername/sage  
+**Version**: v1.1.0 - MCP Server Setup Complete
 
-## Architecture Philosophy
+## 🏗️ Architecture
 
-**MCP-Powered Agent System**: Simple orchestrator with composable tools
-- **Agent Loop**: Basic while loop routing between user, model, and MCP servers
-- **File System MCP**: Official ModelContextProtocol server for all file operations
-- **Sage MCP Server**: Custom culinary intelligence tools (tagging, analysis, formatting)
+**Tiny-Agents MCP Framework**: Hugging Face's MCP-powered agent system
+- **Agent**: `sage_agent_tiny.py` - Tiny-agents orchestrator (~70 lines)
+- **File System MCP**: Official ModelContextProtocol server for file operations
+- **LM Studio**: Local inference via Qwen 3 8B model
 - **Model Agnostic**: Works with LM Studio, OpenAI, Anthropic, or any compatible LLM
 
-**Iterative Enrichment**: Each processing pass adds deeper intelligence layers
-- Pass 1: Basic taxonomic tagging via MCP tools
-- Pass 2: Component decomposition through enhanced prompting
-- Pass 3: Garden integration and Kanban planning
-- Pass 4: Advanced optimization and learning
+```
+User → Tiny-Agents → LM Studio → File System MCP → Recipe Files
+```
 
-**Local-First**: All processing happens locally via LM Studio
-**Future-Proof**: MCP architecture scales from simple tools → complex workflows
+## ✅ What's Working
 
-## MVP Scope
+- **Tiny-Agents Integration**: Hugging Face MCP framework operational
+- **File System MCP Server**: Reading/writing recipe files via MCP protocol
+- **LM Studio Client**: OpenAI-compatible API integration with local model
+- **Recipe Processing**: Ready for culinary intelligence tools
+- **Test Suite**: Comprehensive verification of all components
 
-1. **MCP Server Setup**: Official File System MCP + Custom Sage MCP Server
-2. **Agent Loop**: Simple orchestrator routing messages and tool calls
-3. **Recipe Processing Tools**: analyze_recipe_content, extract_culinary_tags, format_frontmatter
-4. **Indexing System**: Fast search via recipe_index_manager and search_recipes tools
-5. **CLI Interface**: Command-line interface for batch processing and querying
+## 🚀 Quick Start
 
-## Long-term Goals
+### Prerequisites
+- **LM Studio**: Running with loaded model on `localhost:1234`
+- **Node.js**: For MCP filesystem server
+- **Python 3.12+**: With `huggingface_hub[mcp]`
 
-- **Garden Integration**: Harvest-aware meal planning via garden MCP tools
-- **Kanban Planning**: Bidirectional meal planning through Obsidian Kanban boards
-- **Prep Optimization**: Equipment scheduling and shared prep batching
-- **Learning System**: Continuous adaptation to user preferences and patterns
-- **Community Sharing**: Export/import recipes and templates across different tools
+### Setup
+```bash
+git clone https://github.com/ayyusername/sage.git
+cd sage
+pip install -r requirements.txt
+
+# Start the agent
+python sage_agent_tiny.py
+```
+
+### Test Components
+```bash
+# Test LM Studio connectivity
+python test_lm_studio_simple.py
+
+# Test MCP communication  
+python test_mcp.py
+
+# Test integration
+python live_demo.py
+```
+
+## 📁 Project Structure
+
+```
+sage/
+├── sage_agent_tiny.py          # Main tiny-agents implementation
+├── sage_agent_config.json      # MCP server configuration
+├── test-recipes/               # Sample recipe collection
+├── test_*.py                   # Comprehensive test suite
+├── PRD.md                      # Product requirements
+├── GIT_WORKFLOW.md            # Development workflow
+└── Documentation files
+```
+
+## 🛣️ Roadmap
+
+### ✅ Phase 1: Foundation (Step 1.1 Complete)
+- Tiny-agents MCP framework
+- File System MCP server
+- LM Studio integration
+- Testing infrastructure
+
+### 🔄 Next: Step 1.2 - Recipe Processing Tools
+- Custom Sage MCP Server
+- `analyze_recipe_content` tool
+- `extract_culinary_tags` tool
+- `format_frontmatter` tool
+
+### 🔮 Future Phases
+- **Phase 2**: Garden integration for harvest-aware planning
+- **Phase 3**: Kanban boards for interactive meal planning  
+- **Phase 4**: Prep optimization and equipment scheduling
+- **Phase 5**: Community sharing and templates
+
+## 🔧 Technical Stack
+
+- **Agent Framework**: Hugging Face tiny-agents
+- **MCP Protocol**: Model Context Protocol for tool integration
+- **Local LLM**: LM Studio with Qwen 3 8B model
+- **File Operations**: Official MCP filesystem server
+- **Language**: Python 3.12+ with async/await
+- **Testing**: Comprehensive integration test suite
+
+## 📖 Documentation
+
+- **[Product Requirements](PRD.md)**: Detailed specifications and user requirements
+- **[Git Workflow](GIT_WORKFLOW.md)**: Development and branching strategy
+- **[Agent Flowchart](agent_flowchart.md)**: Processing pipeline details
+- **[Claude Instructions](CLAUDE.md)**: Development context and guidelines
 
 ---
 
-*"Because your kitchen deserves AI as sophisticated as your palate"*
+*"Because your kitchen deserves AI as sophisticated as your palate"* 🌿
