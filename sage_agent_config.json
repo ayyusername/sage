@@ -1,0 +1,18 @@
+{
+  "model": "local-model",
+  "provider": "lm_studio",
+  "base_url": "http://localhost:1234/v1",
+  "api_key": "lm-studio",
+  "servers": [
+    {
+      "type": "stdio",
+      "config": {
+        "command": "node",
+        "args": [
+          "mcp-servers/src/filesystem/dist/index.js",
+          "test-recipes"
+        ]
+      }
+    }
+  ]
+}

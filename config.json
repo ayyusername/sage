@@ -1,0 +1,16 @@
+{
+  "lm_studio": {
+    "base_url": "http://localhost:1234/v1",
+    "model": "local-model"
+  },
+  "mcp_servers": {
+    "filesystem": {
+      "command": ["node", "mcp-servers/src/filesystem/dist/index.js"],
+      "allowed_directories": ["test-recipes"]
+    }
+  },
+  "sage": {
+    "recipe_directory": "test-recipes",
+    "log_level": "INFO"
+  }
+}
