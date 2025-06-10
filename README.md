@@ -46,13 +46,13 @@ python sage_agent_tiny.py
 
 ### Test Components
 ```bash
-# Test LM Studio connectivity
-python test_lm_studio_simple.py
-
-# Test MCP communication  
+# Test MCP communication independently
 python test_mcp.py
 
-# Test integration
+# Test complete system integration
+python test_full_integration.py
+
+# Interactive demo
 python live_demo.py
 ```
 

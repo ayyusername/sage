@@ -24,9 +24,8 @@ KEEP_FILES = {
     "sage_agent_config.json",
     
     # Essential test files
-    "test_lm_studio_simple.py",
-    "test_mcp.py", 
-    "test_full_integration.py",
+    "test_mcp.py",  # Tests MCP server communication
+    "test_full_integration.py",  # Complete system integration test
     "simple_demo.py",
     "live_demo.py",
     
