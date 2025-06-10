@@ -69,3 +69,29 @@ Thumbs.db
 # Test outputs
 test_output/
 *.tmp
+
+# Development artifacts to avoid
+debug_*.json
+debug_*.log
+temp_*.py
+test_*.py
+!test_lm_studio_simple.py
+!test_mcp.py
+!test_full_integration.py
+quick_*.py
+experiment_*.py
+*_backup.py
+*_old.py
+*_v2.py
+*_v3.py
+*_final.py
+*_WORKING.py
+scratchpad.*
+notes.txt
+todo.txt
+
+# Common temporary files
+*.bak
+*.orig
+*.rej
+.#*

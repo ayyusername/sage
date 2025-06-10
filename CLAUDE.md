@@ -103,3 +103,79 @@
 - OpenAI client is required for clean LM Studio integration
 - MCP framework provides proper tool orchestration
 - Direct HTTP calls should only be used for testing/debugging, not production
+
+## Repository Maintenance Best Practices
+
+### File Management Philosophy
+**PRINCIPLE**: Every file should have a clear purpose and permanent home. Temporary experiments belong in feature branches, not main.
+
+### Before Creating New Files
+1. **Ask**: Can I modify an existing file instead?
+2. **Ask**: Is this a temporary experiment? → Use a feature branch
+3. **Ask**: Will this file be needed after this task? → If no, don't create it
+4. **Ask**: Does this duplicate existing functionality? → Enhance the original
+
+### Naming Conventions
+**GOOD**:
+- `sage_agent.py` - Single, clear purpose
+- `test_recipe_search.py` - Descriptive test name
+- `utils/file_helpers.py` - Organized in subdirectories
+
+**BAD**:
+- `sage_agent_v2_WORKING_final.py` - Version suffixes
+- `temp_test.py`, `quick_fix.py` - Temporary names
+- `untitled1.py` - Generic names
+
+### Working with Experiments
+```bash
+# ALWAYS use feature branches for experiments
+git checkout -b experiment/new-approach
+
+# Create temporary files freely here
+# Test different approaches
+# When done, consolidate learnings into main files
+
+# Before merging:
+python cleanup_codebase.py  # Remove temporary files
+git add -p  # Selectively stage only permanent changes
+```
+
+### Test File Management
+1. **One test file per feature**: `test_recipe_search.py`, not `test1.py`, `test2.py`
+2. **Group related tests**: Use test classes or functions, not separate files
+3. **Delete failed experiments**: Don't keep broken test variations
+
+### Documentation Updates
+- **Update existing docs**: Don't create new ones without clear need
+- **Use STATUS.md**: For progress tracking, not separate status files
+- **Inline comments > separate docs**: Keep documentation close to code
+
+### Common Pitfalls to Avoid
+1. **Multiple versions of the same file**: Pick one approach and commit
+2. **"Just in case" files**: Delete code you're not using
+3. **Debug/log files in git**: Add to .gitignore
+4. **Commented-out code blocks**: Delete them, git remembers everything
+
+### Clean Commit Practices
+```bash
+# Before committing, always check:
+git status  # Review what's being added
+git diff --cached  # Review actual changes
+
+# Use interactive staging to exclude experiments:
+git add -p  # Stage specific hunks
+git reset HEAD debug_*.py  # Unstage debug files
+```
+
+### Weekly Cleanup Routine
+1. Run `python cleanup_codebase.py`
+2. Review and delete unused branches
+3. Check for duplicate functionality
+4. Update documentation to reflect current state
+
+### When in Doubt
+- **Fewer files are better**: Consolidate related functionality
+- **Clear purpose**: Each file should do one thing well
+- **Git is your safety net**: Delete freely, you can always recover
+
+Remember: A clean codebase is easier to understand, maintain, and extend. Your future self will thank you!
