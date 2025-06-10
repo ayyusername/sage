@@ -2,10 +2,10 @@
 
 *An intelligent culinary knowledge system for professional recipe management and meal planning*
 
-## 🎯 Current Status: Step 1.1 Complete ✅
+## 🎯 Current Status: Step 1.3 - Hallucination Prevention
 
 **Live Repository**: https://github.com/ayyusername/sage  
-**Version**: v1.1.0 - MCP Server Setup Complete
+**Version**: v1.3.0 - File Search Agent with Accuracy Improvements
 
 ## 🏗️ Architecture
 
@@ -101,9 +101,19 @@ sage/
 ## 📖 Documentation
 
 - **[Product Requirements](PRD.md)**: Detailed specifications and user requirements
+- **[Development Guidelines](DEVELOPMENT_GUIDELINES.md)**: How to maintain clean codebase
 - **[Git Workflow](GIT_WORKFLOW.md)**: Development and branching strategy
 - **[Agent Flowchart](agent_flowchart.md)**: Processing pipeline details
+- **[Status](STATUS.md)**: Current development progress
 - **[Claude Instructions](CLAUDE.md)**: Development context and guidelines
+
+## 🧹 Maintaining Clean Codebase
+
+To avoid file proliferation:
+1. Work in feature branches for experiments
+2. Run `python cleanup_codebase.py` before merging
+3. Keep only one production agent file
+4. See [Development Guidelines](DEVELOPMENT_GUIDELINES.md) for details
 
 ---
 
