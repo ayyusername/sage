@@ -1,181 +1,176 @@
 # Sage Development Notes
 
-## IMPORTANT: Constraint Validation
-
-**MANDATORY CHECK**: Before implementing ANY solution, verify it aligns with project constraints:
-
-1. **MVP Focus**: Building a simple assistant that uses tools for recipe/file search examples
-2. **Tool-Based Architecture**: Agent orchestrates tool calls, not custom logic
-3. **MCP Integration**: Use official ModelContextProtocol servers where possible
-4. **Local Processing**: LM Studio + local models, not cloud services
-5. **Iterative Development**: Start simple, add complexity only when needed
-
-**PROCESS**: For each proposed change, ask:
-- Does this maintain the simple assistant + tools architecture?
-- Is this the minimum viable solution for the current step?
-- Does this integrate properly with MCP tools?
-- Will this work reliably with local LM Studio setup?
-
-**REJECT** solutions that violate these constraints, regardless of technical merit.
-
 ## Project Context
-- User is a vegan culinary professional with extensive ingredients/equipment knowledge
-- Building iterative LLM-powered recipe enrichment system
-- Local processing via LM Studio (Llama 3.2 3B Instruct recommended, ~slower but better tool calling)
-- Target: Obsidian vault → intelligent meal planning & prep optimization
-- **Status**: Step 1.2.1 complete - file search agent working with Tests 1-3 passing
+**Sage** is a culinary AI assistant for vegan recipe management and meal planning.
 
-## MCP Architecture
-- **File System MCP**: Official ModelContextProtocol server for file operations
-  - Repository: https://github.com/modelcontextprotocol/servers/tree/main/src/filesystem
-  - Tools: read_file, write_file, list_directory, create_directory
-- **Sage MCP Server**: Custom culinary intelligence server
-  - Tools: analyze_recipe_content, extract_culinary_tags, format_frontmatter
-- **Agent Loop**: Simple while loop routing user ↔ model ↔ MCP tools
+**User Profile**: Vegan culinary professional with extensive ingredient/equipment knowledge, active garden, preference for local AI processing.
+
+**Current Status**: Step 1.3 COMPLETED - Working file search agent with hallucination prevention solved.
+
+## Technical Architecture
+
+### Core Stack
+- **Agent**: sage_agent.py (direct OpenAI client implementation)
+- **LLM**: LM Studio local models (5-10 min response times acceptable)
+- **File Operations**: Direct Python file I/O (no MCP framework)
+- **Test Recipe Data**: test-recipes/sample-recipe.md (Cashew Alfredo)
+
+### CRITICAL Architecture Decisions
+1. **Use Direct File Operations** - Not MCP framework (sage_agent.py vs sage_agent_tiny.py)
+2. **OpenAI Client Required** - For clean LM Studio integration  
+3. **Strict Accuracy Controls** - System prompts prevent hallucination
+4. **Local Processing Only** - No cloud services, all via LM Studio
+5. **Simple Agent Loop** - Orchestrates tool calls, intelligence in tools + model
+
+### Technical Constraints
+- **Response Times**: 5-10 minutes acceptable for complex operations
+- **Timeout Handling**: Use 10+ minute timeouts for all LM Studio calls
+- **Async Warnings**: Ignore async context manager warnings during shutdown
+- **Model Recommendations**: Llama 3.2 3B+ for proper tool calling
 
 ## Commands to Remember
-- LM Studio API: `http://localhost:1234/v1/chat/completions`
-- MCP Server setup: Clone official servers repo, install filesystem server
-- Processing approach: Agent orchestrates tool calls across MCP servers
-- Data evolution: MCP tools → enhanced prompting → advanced workflows
-- **Model Recommendation**: Use Llama 3.2 3B+ for proper MCP tool calling (qwen2.5-0.5b has compatibility issues)
-- **Test Suite**: `python test_runner.py` for full validation, individual tests available
 
-## Architecture Decisions
-- Use proven MCP infrastructure instead of building from scratch
-- Agent as simple orchestrator, intelligence in model + tools
-- Composable tool architecture for easy extension
-- Start with file operations + basic culinary tools
-
-## Tool Selection Principles
-
-### Prefer Standard Libraries
-- ALWAYS use established, well-maintained libraries over custom implementations
-- Examples: OpenAI client, requests, pandas - don't reinvent these
-- If a standard tool isn't working, debug and fix it rather than replace it
-
-### When NOT to Work Around Issues
-- Don't abandon proper APIs for raw HTTP when the API should work
-- Don't write custom implementations of existing functionality
-- Don't sacrifice type safety, error handling, or maintainability for "quick fixes"
-
-### Debug First, Replace Last
-- When standard tools fail, assume configuration/compatibility issues first
-- Only replace tools after exhausting debugging options
-- Ask "What am I losing by switching?" before suggesting alternatives
-
-### Problem-Solution Mapping
-
-- **Prompting Issues**: Fix with better prompts, examples, or instructions
-- **Logic Errors**: Fix with code changes
-- **Architecture Problems**: Fix with structural changes
-
-**RULE**: When an AI agent isn't following instructions correctly, the solution is almost always PROMPTING, not code architecture. Only suggest code changes when:
-1. The prompt is already clear and specific
-2. The AI physically cannot do what's requested with available tools
-3. There's a genuine technical limitation
-
-**Red Flags for Overengineering**:
-- Suggesting "two-stage architecture" for instruction-following problems
-- Creating new classes/files when prompts could be improved
-- Building validation systems when clearer instructions would work
-- Adding complexity when the AI just needs better examples
-
-**Default Response**: "This looks like a prompting issue. Let's fix the instructions first."
-
-### No Hacks or Workarounds
-
-**CRITICAL**: Never use hacks, workarounds, or temporary solutions that compromise the system integrity.
-
-**Examples of FORBIDDEN approaches**:
-- Hardcoding filenames instead of fixing file path logic
-- Creating manual workarounds instead of fixing underlying bugs
-- Building temporary solutions that "prove" functionality without actually working
-- Using tricks that make demos work but aren't real solutions
-
-**REQUIRED**: All solutions must be rigorous, complete, and production-ready:
-- Fix root causes, not symptoms
-- Build solutions that scale and work in all cases
-- Test thoroughly with real data, not contrived examples
-- Ensure robustness and reliability over quick demos
-
-### Specific to This Project
-- OpenAI client is required for clean LM Studio integration
-- MCP framework provides proper tool orchestration
-- Direct HTTP calls should only be used for testing/debugging, not production
-
-## Repository Maintenance Best Practices
-
-### File Management Philosophy
-**PRINCIPLE**: Every file should have a clear purpose and permanent home. Temporary experiments belong in feature branches, not main.
-
-### Before Creating New Files
-1. **Ask**: Can I modify an existing file instead?
-2. **Ask**: Is this a temporary experiment? → Use a feature branch
-3. **Ask**: Will this file be needed after this task? → If no, don't create it
-4. **Ask**: Does this duplicate existing functionality? → Enhance the original
-
-### Naming Conventions
-**GOOD**:
-- `sage_agent.py` - Single, clear purpose
-- `test_recipe_search.py` - Descriptive test name
-- `utils/file_helpers.py` - Organized in subdirectories
-
-**BAD**:
-- `sage_agent_v2_WORKING_final.py` - Version suffixes
-- `temp_test.py`, `quick_fix.py` - Temporary names
-- `untitled1.py` - Generic names
-
-### Working with Experiments
+### Development
 ```bash
-# ALWAYS use feature branches for experiments
-git checkout -b experiment/new-approach
+# Test the working agent
+python sage_agent.py
 
-# Create temporary files freely here
-# Test different approaches
-# When done, consolidate learnings into main files
+# Test specific functionality  
+python test_clean_agent.py
 
-# Before merging:
-python cleanup_codebase.py  # Remove temporary files
-git add -p  # Selectively stage only permanent changes
+# Test raw MCP communication (debugging only)
+python test_mcp.py
 ```
 
-### Test File Management
-1. **One test file per feature**: `test_recipe_search.py`, not `test1.py`, `test2.py`
-2. **Group related tests**: Use test classes or functions, not separate files
-3. **Delete failed experiments**: Don't keep broken test variations
+### LM Studio Setup
+- Base URL: http://localhost:1234/v1
+- API Key: "lm-studio" 
+- Recommended Model: Llama 3.2 3B Instruct or higher
+- Ensure LM Studio is running before testing
 
-### Documentation Updates
-- **Update existing docs**: Don't create new ones without clear need
-- **Use STATUS.md**: For progress tracking, not separate status files
-- **Inline comments > separate docs**: Keep documentation close to code
+## Code Style & Patterns
 
-### Common Pitfalls to Avoid
-1. **Multiple versions of the same file**: Pick one approach and commit
-2. **"Just in case" files**: Delete code you're not using
-3. **Debug/log files in git**: Add to .gitignore
-4. **Commented-out code blocks**: Delete them, git remembers everything
+### File Organization
+- **ONE agent file**: sage_agent.py (production)
+- **Focused tests**: test_clean_agent.py, test_mcp.py
+- **Clean commits**: Remove experimental files before merging
+- **Use .gitignore**: For mcp-servers/, __pycache__, etc.
 
-### Clean Commit Practices
-```bash
-# Before committing, always check:
-git status  # Review what's being added
-git diff --cached  # Review actual changes
-
-# Use interactive staging to exclude experiments:
-git add -p  # Stage specific hunks
-git reset HEAD debug_*.py  # Unstage debug files
+### Agent Implementation Pattern
+```python
+class SageAgent:
+    def __init__(self):
+        self.client = OpenAI(base_url="http://localhost:1234/v1", api_key="lm-studio")
+        
+    async def chat(self, message: str) -> str:
+        # 1. Gather file information automatically
+        # 2. Add context to system prompt  
+        # 3. Call LLM with strict accuracy controls
+        # 4. Return only factual responses based on file data
 ```
 
-### Weekly Cleanup Routine
-1. Run `python cleanup_codebase.py`
-2. Review and delete unused branches
-3. Check for duplicate functionality
-4. Update documentation to reflect current state
+### Error Handling
+- **Tool failures**: Graceful degradation to simpler methods
+- **LM Studio timeouts**: Use 10+ minute timeouts
+- **File operations**: Always preserve original content
+- **Hallucination prevention**: Strict system prompts + real data only
 
-### When in Doubt
-- **Fewer files are better**: Consolidate related functionality
-- **Clear purpose**: Each file should do one thing well
-- **Git is your safety net**: Delete freely, you can always recover
+## Current Capability Levels (All Working)
 
-Remember: A clean codebase is easier to understand, maintain, and extend. Your future self will thank you!
+1. **File Discovery**: Lists available recipe files
+2. **Content Reading**: Reads specific recipe files 
+3. **Recipe Search**: Finds recipes matching criteria
+4. **Smart Analysis**: Multi-criteria recommendations
+5. **Expert Analysis**: Ingredient matching with actual file contents
+
+## Development Workflow
+
+### Git Workflow
+```bash
+# Feature development
+git checkout -b feature/description
+# ... develop ...
+git checkout main
+git merge feature/description
+git tag v1.X.Y
+```
+
+### Commit Format
+```
+<type>: <description>
+
+<body with details>
+
+🌿 Generated with [Claude Code](https://claude.ai/code)
+
+Co-Authored-By: Claude <noreply@anthropic.com>
+```
+
+### Before Merging
+- [ ] Remove experimental files
+- [ ] Test with python sage_agent.py
+- [ ] Verify all 5 capability levels working
+- [ ] Clean commit history
+
+## Problem-Solution Mapping
+
+### Agent Issues → Prompting Fixes
+- **Hallucination**: Strict system prompts + real data only
+- **Tool calling**: Pattern matching + automatic tool execution
+- **Accuracy**: "ONLY use information from Tool Results" in prompts
+
+### When NOT to Change Architecture
+- Don't abandon OpenAI client for raw HTTP
+- Don't create multiple agent versions  
+- Don't build custom MCP when direct file ops work
+- Don't add complexity when prompts can be improved
+
+## Testing Strategy
+
+### Essential Tests
+1. **test_clean_agent.py**: All 5 capability levels
+2. **test_mcp.py**: Raw MCP communication (debugging)
+3. **Manual testing**: python sage_agent.py with real queries
+
+### Test Data
+- **test-recipes/sample-recipe.md**: Cashew Alfredo recipe
+- Use this real data for accuracy testing
+- Don't create mock data - use actual file contents
+
+## Next Development Phase
+
+### Immediate Priorities
+- Add more test recipes for broader functionality
+- Implement ingredient-based recipe search
+- Add recipe metadata extraction
+
+### Architecture Extensions
+- Additional file operations (write, create)
+- Recipe analysis tools
+- Search and indexing capabilities
+
+### Future Phases
+- Garden integration (seasonal planning)
+- Kanban board generation (Obsidian integration)
+- Prep optimization and workflow management
+
+## Debugging Common Issues
+
+### "No response received"
+- Check LM Studio is running on localhost:1234
+- Verify model is loaded in LM Studio
+- Increase timeout settings
+
+### Tool execution errors
+- File paths must be absolute
+- Check test-recipes/ directory exists
+- Verify file permissions
+
+### Hallucination problems
+- Strengthen system prompts
+- Add "ONLY use Tool Results" instructions
+- Provide real file data in context
+
+---
+
+**Remember**: Keep it simple. Direct file operations work. Focus on prompting over architecture changes. Test with real data.

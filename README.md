@@ -1,120 +1,97 @@
 # Sage 🌿
 
-*An intelligent culinary knowledge system for professional recipe management and meal planning*
-
-## 🎯 Current Status: Step 1.3 - Hallucination Prevention
-
-**Live Repository**: https://github.com/ayyusername/sage  
-**Version**: v1.3.0 - File Search Agent with Accuracy Improvements
-
-## 🏗️ Architecture
-
-**Tiny-Agents MCP Framework**: Hugging Face's MCP-powered agent system
-- **Agent**: `sage_agent_tiny.py` - Tiny-agents orchestrator (~70 lines)
-- **File System MCP**: Official ModelContextProtocol server for file operations
-- **LM Studio**: Local inference via Qwen 3 8B model
-- **Model Agnostic**: Works with LM Studio, OpenAI, Anthropic, or any compatible LLM
-
-```
-User → Tiny-Agents → LM Studio → File System MCP → Recipe Files
-```
-
-## ✅ What's Working
-
-- **Tiny-Agents Integration**: Hugging Face MCP framework operational
-- **File System MCP Server**: Reading/writing recipe files via MCP protocol
-- **LM Studio Client**: OpenAI-compatible API integration with local model
-- **Recipe Processing**: Ready for culinary intelligence tools
-- **Test Suite**: Comprehensive verification of all components
+*An intelligent culinary assistant for vegan recipe management and meal planning*
 
 ## 🚀 Quick Start
 
 ### Prerequisites
-- **LM Studio**: Running with loaded model on `localhost:1234`
-- **Node.js**: For MCP filesystem server
-- **Python 3.12+**: With `huggingface_hub[mcp]`
+- **LM Studio**: Running with model loaded on `localhost:1234`
+- **Python 3.12+**: With OpenAI client library
 
 ### Setup
 ```bash
-git clone https://github.com/ayyusername/sage.git
+git clone <your-repository-url>
 cd sage
 pip install -r requirements.txt
 
 # Start the agent
-python sage_agent_tiny.py
+python sage_agent.py
 ```
 
-### Test Components
+### Test the System
 ```bash
-# Test MCP communication independently
+# Test all functionality
+python test_clean_agent.py
+
+# Test MCP communication (debugging)
 python test_mcp.py
-
-# Test complete system integration
-python test_full_integration.py
-
-# Interactive demo
-python live_demo.py
 ```
+
+## 🛠️ LM Studio Configuration
+
+1. **Download and install** [LM Studio](https://lmstudio.ai/)
+2. **Load a model**: Llama 3.2 3B Instruct or similar
+3. **Start local server**: Settings → Server → Start Server
+4. **Verify endpoint**: http://localhost:1234/v1 should be accessible
 
 ## 📁 Project Structure
 
 ```
 sage/
-├── sage_agent_tiny.py          # Main tiny-agents implementation
-├── sage_agent_config.json      # MCP server configuration
-├── test-recipes/               # Sample recipe collection
-├── test_*.py                   # Comprehensive test suite
-├── PRD.md                      # Product requirements
-├── GIT_WORKFLOW.md            # Development workflow
-└── Documentation files
+├── sage_agent.py              # Main agent (working implementation)
+├── test_clean_agent.py        # Test all 5 capability levels
+├── test-recipes/              # Sample recipe data
+│   └── sample-recipe.md       # Cashew Alfredo test recipe
+├── CLAUDE.md                  # Development context for AI assistance
+└── archive/                   # Old documentation files
 ```
 
-## 🛣️ Roadmap
+## 🎯 What It Does
 
-### ✅ Phase 1: Foundation (Step 1.1 Complete)
-- Tiny-agents MCP framework
-- File System MCP server
-- LM Studio integration
-- Testing infrastructure
+**Current Capabilities** (All Working):
+1. **File Discovery**: Lists available recipe files
+2. **Content Reading**: Reads specific recipe files 
+3. **Recipe Search**: Finds recipes matching criteria
+4. **Smart Analysis**: Multi-criteria recommendations
+5. **Expert Analysis**: Ingredient matching with actual file contents
 
-### 🔄 Next: Step 1.2 - Recipe Processing Tools
-- Custom Sage MCP Server
-- `analyze_recipe_content` tool
-- `extract_culinary_tags` tool
-- `format_frontmatter` tool
+**Example Usage**:
+```
+User: What recipes are available?
+Sage: I have the Cashew Alfredo recipe available in sample-recipe.md
 
-### 🔮 Future Phases
-- **Phase 2**: Garden integration for harvest-aware planning
-- **Phase 3**: Kanban boards for interactive meal planning  
-- **Phase 4**: Prep optimization and equipment scheduling
-- **Phase 5**: Community sharing and templates
+User: What can I make with cashews and nutritional yeast?
+Sage: You can make the Cashew Alfredo! It uses 1 cup raw cashews and 1/2 cup nutritional yeast...
+```
 
-## 🔧 Technical Stack
+## 🔧 Technical Architecture
 
-- **Agent Framework**: Hugging Face tiny-agents
-- **MCP Protocol**: Model Context Protocol for tool integration
-- **Local LLM**: LM Studio with Qwen 3 8B model
-- **File Operations**: Official MCP filesystem server
-- **Language**: Python 3.12+ with async/await
-- **Testing**: Comprehensive integration test suite
+- **Agent**: Direct OpenAI client for LM Studio integration
+- **File Operations**: Python file I/O (no external dependencies)
+- **Accuracy Controls**: Strict prompts prevent hallucination
+- **Local Processing**: All via LM Studio, no cloud services
 
-## 📖 Documentation
+## 🐛 Troubleshooting
 
-- **[Product Requirements](PRD.md)**: Detailed specifications and user requirements
-- **[Development Guidelines](DEVELOPMENT_GUIDELINES.md)**: How to maintain clean codebase
-- **[Git Workflow](GIT_WORKFLOW.md)**: Development and branching strategy
-- **[Agent Flowchart](agent_flowchart.md)**: Processing pipeline details
-- **[Status](STATUS.md)**: Current development progress
-- **[Claude Instructions](CLAUDE.md)**: Development context and guidelines
+### "No response received"
+- Check LM Studio is running on localhost:1234
+- Verify model is loaded in LM Studio
+- Try increasing timeout settings
 
-## 🧹 Maintaining Clean Codebase
+### Tool execution errors
+- File paths must be absolute
+- Check test-recipes/ directory exists
+- Verify file permissions
 
-To avoid file proliferation:
-1. Work in feature branches for experiments
-2. Run `python cleanup_codebase.py` before merging
-3. Keep only one production agent file
-4. See [Development Guidelines](DEVELOPMENT_GUIDELINES.md) for details
+## 📊 Development Status
+
+**Current Phase**: Step 1.3 COMPLETED ✅
+- Working file search agent
+- Hallucination prevention solved
+- All 5 capability levels functional
+
+**Next Phase**: Add more test recipes and extend functionality
 
 ---
 
-*"Because your kitchen deserves AI as sophisticated as your palate"* 🌿
+*For development context and guidelines, see [CLAUDE.md](CLAUDE.md)*
